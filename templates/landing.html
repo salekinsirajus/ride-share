@@ -1,0 +1,15 @@
+{%- extends "bootstrap/base.html" -%}
+
+<html>
+<head>
+	<title> Available rides </title>
+</head>
+<body>
+	<p>Thank you for posting {{ name }} </p>
+
+	{% for trip in matchedTrip: %}
+		<p>A ride between {{trip.dateearly}} and {{trip.datelate}} from {{trip.origin}} to {{trip.destination}} is available. </p>
+
+	{% endfor  %}
+</body>
+</html>

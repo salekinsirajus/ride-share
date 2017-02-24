@@ -1,0 +1,28 @@
+
+	{% extends "bootstrap/base.html" %}
+
+	{% block title %} Trip Details {% endblock %}
+
+        {% block content  %}
+	{% from "_formhelpers.html" import render_field  %}
+	{% for message in form.dateEarly.errors  %}
+		<div> {{ message }} </div>
+	{% endfor %}
+                <form action="" method="post" name="dataInput">
+			<dl>
+				{{ render_field(form.fName) }}
+				{{ render_field(form.lName) }}
+				{{ render_field(form.origin) }}
+				{{ render_field(form.destination) }}
+                                {{ render_field(form.dateEarly) }}
+                                {{ render_field(form.dateLate) }}
+                                {{ render_field(form.money) }}
+                                {{ render_field(form.seats) }}
+                                {{ render_field(form.submit) }}    
+ 				<input type="submit" value="post">
+			</dl>
+		</form>
+
+        {% endblock  %}
+
+
