@@ -1,35 +1,31 @@
-import psycopg2
-
+#for Flask app
 from flask import Flask, render_template, request, url_for, redirect, session
-
+#for SQLAlchemy session and mapping
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import *
-
-
+#for WTForms
 from wtforms import Form
 from wtforms import StringField, TextAreaField, DateField, FloatField, SubmitField, IntegerField
 from wtforms import  validators
-
+#for Bootstrap
 from flask_bootstrap import Bootstrap
 
 #Binding sqlalchemy to the existing postgresql db
-
-#producing metadata object
+#and producing metadata object
 metadata = MetaData()
 engine = create_engine("postgresql+psycopg2://appollo:My00742696@/ecrideshare_db")
 metadata.reflect(engine, only=['passengers', 'users', 'trips'])
 Base = automap_base(metadata=metadata)
 Base.prepare()
 
-#mapping ORM classes to PostgreSQL classes
+#mapping ORM classes to existing PostgreSQL classes
 passengers = Base.classes.passengers
 users = Base.classes.users
 trips = Base.classes.trips
 
-
+#Global session
 Session = sessionmaker(bind=engine)
-
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -49,7 +45,6 @@ class UserInput(Form):
         money = FloatField(u'Gas Money', [validators.optional("How much do you want from your riders?")])
         seats = IntegerField(u'Number of seats', [validators.optional("Is there enough room?")])
         submit = SubmitField(u'Post')
-
 
 @app.route('/', methods = ['POST','GET'])
 def index():
@@ -76,41 +71,22 @@ def dataInput():
                 for trip in sessionSA.query(trips):
 			if trip.origin==origin and trip.destination==destination:
 				matchedTrip.append(trip)
-		print (matchedTrip)
 		if len(matchedTrip) > 0:
 			print ("showing the list")
-			return render_template("landing.html", matchedTrip = matchedTrip, name = name) 
-					
+			return render_template("landing.html", matchedTrip = matchedTrip, name = name) 					
 		newUser = users(name=name)
 		newTrip = trips(origin=origin, destination=destination, dateearly=dateearly, datelate=datelate, price=money)
 		sessionSA.add(newUser)
 		sessionSA.add(newTrip)
 		sessionSA.commit()
-	
 
                 return redirect(url_for('landing'))
         return render_template('dataInput.html', form = form)
-
 
 @app.route('/landing')
 def landing():
 	return render_template('landing.html', name=session['name'])
 
-@app.route('/showUsers')
-def listUsers():	
-	#creating a configured session class
-	Session = sessionmaker(bind=engine)
-	#creating a session
-	session = Session()
-	
-	userlist = []
-
-	for instance in session.query(users):
-		userlist.append(instance.name)
-	print (userlist)
-
-	
-	return render_template('showuserlist.html', person = userlist)
 if __name__ == '__main__':
 	app.debug= True
 	app.run()
