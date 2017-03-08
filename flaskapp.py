@@ -14,7 +14,7 @@ from flask_bootstrap import Bootstrap
 #Binding sqlalchemy to the existing postgresql db
 #and producing metadata object
 metadata = MetaData()
-engine = create_engine("postgresql+psycopg2://appollo:My00742696@/ecrideshare_db")
+engine = create_engine("postgresql+psycopg2://dbUsername:passcode@/ecrideshare_db")
 metadata.reflect(engine, only=['passengers', 'users', 'trips'])
 Base = automap_base(metadata=metadata)
 Base.prepare()
