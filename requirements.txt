@@ -1,0 +1,6 @@
+#Libraries necessary to run this app
+flask
+sqlalchemy
+wtforms
+flask_bootstrap
+psycopg2
